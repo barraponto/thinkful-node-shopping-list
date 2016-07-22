@@ -25,7 +25,7 @@ app.post('/items', jsonParser, function(request, response){
   }
 });
 
-app.delete('/items/:id', function(request, response){
+app.delete('/items/:id', jsonParser, function(request, response){
   if (!request.body) {
     response.sendStatus(400);
   } else {
