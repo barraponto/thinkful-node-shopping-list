@@ -16,25 +16,25 @@ app.get('/items', function(request, response){
   response.json(storage.items);
 });
 
-app.post('/items', jsonParser, function(request, response){
+var requireBody = function(request, response, next){
   if (!request.body) {
     response.sendStatus(400);
   } else {
-    var item = storage.add(request.body.name);
-    response.status(201).json(item);
+    next();
   }
+};
+
+app.post('/items', jsonParser, requireBody, function(request, response){
+  var item = storage.add(request.body.name);
+  response.status(201).json(item);
 });
 
-app.delete('/items/:id', jsonParser, function(request, response){
-  if (!request.body) {
-    response.sendStatus(400);
+app.delete('/items/:id', jsonParser, requireBody, function(request, response){
+  var item = storage.remove(request.params.id);
+  if (item) {
+    response.status(200).json(item);
   } else {
-    var item = storage.remove(request.params.id);
-    if (item) {
-      response.status(200).json(item);
-    } else {
-      response.sendStatus(404);
-    }
+    response.sendStatus(404);
   }
 });
 
