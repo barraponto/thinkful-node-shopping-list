@@ -22,4 +22,11 @@ Storage.prototype.remove = function(id) {
   return item;
 };
 
+Storage.prototype.update = function(id, update) {
+  this.items = this.items.map(function(item) {
+      return item.id == id ? update : item;
+  });
+  return this.get(id);
+};
+
 module.exports = Storage;

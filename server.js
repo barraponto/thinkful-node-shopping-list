@@ -38,4 +38,13 @@ app.delete('/items/:id', jsonParser, requireBody, function(request, response){
   }
 });
 
+app.put('/items/:id', jsonParser, requireBody, function(request, response){
+  var item = storage.update(request.params.id, request.body);
+  if (item) {
+    response.status(200).json(item);
+  } else {
+    response.sendStatus(404);
+  }
+});
+
 app.listen(process.env.PORT || 3000);
