@@ -47,4 +47,9 @@ app.put('/items/:id', jsonParser, requireBody, function(request, response){
   }
 });
 
-app.listen(process.env.PORT || 3000);
+exports.app = app;
+exports.storage = storage;
+
+if (require.main == module) {
+  app.listen(process.env.PORT || 3000);
+}
