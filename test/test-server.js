@@ -49,7 +49,7 @@ describe('Shopping List', function(){
     });
   });
   it('should edit item on put', function(done){
-    chai.request(app).put('/items/1').send({'name': 'Broccoli', id: 1}).end(function(err, res){
+    chai.request(app).put('/items/1').send({'name': 'Broccoli'}).end(function(err, res){
       should.not.exist(err);
       res.should.have.status(200);
       res.should.be.json;
@@ -72,6 +72,12 @@ describe('Shopping List', function(){
       done();
     });
   });
+  it('should not edit non-existing item', function(done){
+    chai.request(app).put('/items/9').send({'name': 'Broccoli'}).end(function(err, res){
+      err.status.should.equal(404);
+      done();
+    });
+  });
   it('should delete item on delete', function(done){
     chai.request(app).delete('/items/1').end(function(err, res){
       should.not.exist(err);
@@ -86,6 +92,12 @@ describe('Shopping List', function(){
       storage.items.should.be.a('array');
       item = storage.get(1);
       should.not.exist(item);
+      done();
+    });
+  });
+  it('should not delete non-existing item', function(done){
+    chai.request(app).delete('/items/9').end(function(err, res){
+      err.status.should.equal(404);
       done();
     });
   });
