@@ -23,6 +23,8 @@ Storage.prototype.remove = function(id) {
 };
 
 Storage.prototype.update = function(id, update) {
+  // ensure id is kept on update
+  update.id = Number(id);
   this.items = this.items.map(function(item) {
       return item.id == id ? update : item;
   });
