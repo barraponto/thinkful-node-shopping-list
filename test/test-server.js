@@ -8,10 +8,10 @@ var storage = server.storage;
 
 chai.use(http);
 
-
 describe('Shopping List', function(){
   it('should list items on get', function(done){
     chai.request(app).get('/items').end(function(err, res){
+      should.not.exist(err);
       res.should.have.status(200);
       res.should.be.json;
       res.body.should.be.a('array');
@@ -28,7 +28,7 @@ describe('Shopping List', function(){
   });
   it('should add items on post', function(done){
     chai.request(app).post('/items').send({'name': 'Kale'}).end(function(err, res){
-      should.equal(err, null);
+      should.not.exist(err);
       res.should.have.status(201);
       res.should.be.json;
       res.body.should.be.a('object');
@@ -48,6 +48,45 @@ describe('Shopping List', function(){
       done();
     });
   });
-  it('should edit item on put');
-  it('should delete item on delete');
+  it('should edit item on put', function(done){
+    chai.request(app).put('/items/1').send({'name': 'Broccoli', id: 1}).end(function(err, res){
+      should.not.exist(err);
+      res.should.have.status(200);
+      res.should.be.json;
+      res.body.should.be.a('object');
+      res.body.should.have.property('name');
+      res.body.should.have.property('id');
+      res.body.id.should.be.a('number');
+      res.body.name.should.be.a('string');
+      res.body.name.should.equal('Broccoli');
+      storage.items.should.be.a('array');
+      storage.items.should.have.length(4);
+      item = storage.get(1);
+      item.should.be.a('object');
+      item.should.have.property('id');
+      item.should.have.property('name');
+      item.id.should.be.a('number');
+      item.name.should.be.a('string');
+      item.id.should.equal(1);
+      item.name.should.equal('Broccoli');
+      done();
+    });
+  });
+  it('should delete item on delete', function(done){
+    chai.request(app).delete('/items/1').end(function(err, res){
+      should.not.exist(err);
+      res.should.have.status(200);
+      res.should.be.json;
+      res.body.should.be.a('object');
+      res.body.should.have.property('name');
+      res.body.should.have.property('id');
+      res.body.id.should.be.a('number');
+      res.body.name.should.be.a('string');
+      res.body.name.should.equal('Broccoli');
+      storage.items.should.be.a('array');
+      item = storage.get(1);
+      should.not.exist(item);
+      done();
+    });
+  });
 });
